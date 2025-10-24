@@ -139,10 +139,10 @@ try:
         if not monthly.empty:
             monthly["合計勤務時間"] = monthly["勤務時間_td"].apply(format_timedelta)
             monthly_display = monthly[["月", "合計勤務時間"]]
-            st.subheader("月次集計（全体の参考）")
+            st.subheader("月次集計")
             st.dataframe(monthly_display, use_container_width=True)
         else:
-            st.subheader("月次集計（全体の参考）")
+            st.subheader("月次集計")
             st.info("集計対象データがありません。")
 
 except Exception as e:
