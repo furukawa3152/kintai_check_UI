@@ -5,7 +5,7 @@ import pandas as pd
 import gspread
 from google.oauth2.service_account import Credentials
 
-FIXED_SHEET_URL = "https://docs.google.com/spreadsheets/d/1jooJnsBDFhHQUY5ZFuYiyQ--fQe4UC_3HBREzVlb-RQ/edit?hl=ja&gid=2006104343#gid=2006104343"
+FIXED_SHEET_URL = "https://docs.google.com/spreadsheets/d/1Bl5O42AEf0g2Yal4_SnmouacMNMf0ruApAEMBxnRBC0/edit?hl=ja&gid=0#gid=0"
 FIXED_WORKSHEET_NAME = "勤務表"
 
 
