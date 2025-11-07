@@ -71,11 +71,12 @@ try:
     if not values:
         st.info("シートにデータがありません。")
     else:
-        # 期待カラム: A:ユーザーID, B:日付, C:出勤時刻, D:退勤時刻（E列は使用しない）
-        expected_cols = ["ユーザーID", "日付", "出勤時刻", "退勤時刻"]
-        # values の先頭4列のみを使用
-        trimmed = [row[:4] for row in values]
-        df = pd.DataFrame(trimmed, columns=expected_cols[: len(trimmed[0])])
+        # 期待カラム: A:ユーザーID, B:日付, C:出勤時刻, D:退勤時刻, E:コメント
+        expected_cols = ["ユーザーID", "日付", "出勤時刻", "退勤時刻", "コメント"]
+        # シート実データの列数に合わせて最大5列まで取り込む
+        max_cols = min(5, max(len(r) for r in values))
+        trimmed = [row[:max_cols] for row in values]
+        df = pd.DataFrame(trimmed, columns=expected_cols[: max_cols])
         if not df.empty and (
             (str(df.iloc[0, 0]).strip() == "ユーザーID")
             or (str(df.iloc[0, 1]).strip() == "日付")
@@ -120,8 +121,11 @@ try:
             st.info("有効な日付が存在しないため、月選択ができません。")
             df_month = df.iloc[0:0].copy()
 
-        # 表示用: 選択月の明細（B〜D列 + 算出E相当）
-        display_df = df_month[["日付", "出勤時刻", "退勤時刻", "勤務時間"]].copy()
+        # 表示用: 選択月の明細（B〜D列 + 算出勤務時間 + コメント）
+        base_cols = ["日付", "出勤時刻", "退勤時刻", "勤務時間"]
+        if "コメント" in df_month.columns:
+            base_cols.append("コメント")
+        display_df = df_month[base_cols].copy()
         st.subheader("明細")
         st.dataframe(display_df, use_container_width=True)
 
@@ -139,10 +143,10 @@ try:
         if not monthly.empty:
             monthly["合計勤務時間"] = monthly["勤務時間_td"].apply(format_timedelta)
             monthly_display = monthly[["月", "合計勤務時間"]]
-            st.subheader("月次集計")
+            st.subheader("月次集計（全体の参考）")
             st.dataframe(monthly_display, use_container_width=True)
         else:
-            st.subheader("月次集計")
+            st.subheader("月次集計（全体の参考）")
             st.info("集計対象データがありません。")
 
 except Exception as e:
